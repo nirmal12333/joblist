@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Roadmap Fix</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+    <h1>Roadmap Test</h1>
+    <div id="timeline-container"></div>
+    
+    <script>
+        // Test the roadmap rendering
+        const roadmap = [
+            { title: "Test Item 1", type: "learn" },
+            { title: "Test Item 2", type: "project" },
+            { title: "Test Item 3", type: "milestone" }
+        ];
+        
+        const timeline = document.getElementById('timeline-container');
+        timeline.innerHTML = roadmap.map((item, index) => `
+            <div class="timeline-item" style="opacity:0; transform:translateY(20px); margin:20px 0; padding-left:30px; position:relative;">
+                <div style="position:absolute; left:-10px; top:5px; width:16px; height:16px; background:#0f172a; border-radius:50%; border:3px solid #22d3ee; box-shadow:0 0 10px #22d3ee;"></div>
+                <h3>${item.title}</h3>
+                <span style="color:#64748b; text-transform:uppercase; font-size:0.8rem">${item.type}</span>
+            </div>
+        `).join('');
+        
+        // Test the animation
+        setTimeout(() => {
+            const items = document.querySelectorAll('.timeline-item');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.8s, transform 0.8s';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        }, 100);
+        
+        console.log('Test completed');
+    </script>
+</body>
+</html>

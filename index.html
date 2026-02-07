@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Analysis & Career Roadmap</title>
+    <meta
+      name="description"
+      content="Turn your resume into a personalized career roadmap with AI-powered analysis."
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- GSAP / ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        /* Language Switcher Styles */
+        #language-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-family: inherit;
+            margin-left: 1rem;
+        }
+        #language-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        #language-select option {
+            background: var(--bg);
+            color: var(--text);
+        }
+    </style>
+  </head>
+  <body>
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <div class="nav-logo">Career<span class="highlight">Road</span></div>
+        <ul class="nav-links">
+            <li><a href="#hero" data-i18n="nav_home">Home</a></li>
+            <li><a href="#upload" data-i18n="nav_analyze">Analyze</a></li>
+            <li><a href="#roadmap" data-i18n="nav_roadmap">Roadmap</a></li>
+            <li><a href="#jobs" data-i18n="nav_jobs">Jobs</a></li>
+        </ul>
+        <select id="language-select">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+        </select>
+    </nav>
+
+    <main id="app">
+      <!-- 1. LANDING SECTION -->
+      <section id="hero" class="full-screen">
+        <div class="content-wrapper">
+          <h1 class="hero-title">
+            <span class="title-line d-block" data-i18n="hero_title_1">Turn Your Resume Into a</span>
+            <span class="title-line d-block"><span class="highlight" data-i18n="hero_title_2">Career Roadmap</span></span>
+          </h1>
+          <p class="hero-subtitle" data-i18n="hero_subtitle">
+            Get instant feedback, a personalized learning path, and job
+            recommendations.
+          </p>
+          <div class="hero-cta-group">
+              <button id="cta-analyze" class="btn-primary" data-i18n="cta_analyze">
+                Analyze My Resume <span style="margin-left:8px">→</span>
+              </button>
+              <p class="cta-note" data-i18n="cta_note">Free AI Analysis • No Sign-up Required</p>
+          </div>
+        </div>
+
+        <!-- Floating Cards Decoration -->
+        <div class="hero-floating-cards">
+            <div class="float-card card-1 glass">
+                <div class="icon">📊</div>
+                <div class="text">
+                    <small data-i18n="float_score">Resume Score</small>
+                    <strong>85/100</strong>
+                </div>
+            </div>
+            <div class="float-card card-2 glass">
+                <div class="icon">🚀</div>
+                <div class="text">
+                    <small data-i18n="float_role">Target Role</small>
+                    <strong>Frontend Dev</strong>
+                </div>
+            </div>
+            <div class="float-card card-3 glass">
+                <div class="icon">💼</div>
+                <div class="text">
+                    <small data-i18n="float_salary">Avg. Salary</small>
+                    <strong>₹12L/yr</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-bg-elements">
+          <div class="glow-blob glow-1"></div>
+          <div class="glow-blob glow-2"></div>
+        </div>
+      </section>
+
+      <!-- 2. RESUME UPLOAD SECTION -->
+      <section id="upload" class="full-screen hidden">
+        <div class="card upload-card">
+          <h2 data-i18n="upload_title">Upload Your Resume</h2>
+          <div id="drop-zone" class="drop-zone">
+            <p data-i18n="drop_text">Drag & Drop your resume here</p>
+            <span class="sub-text" data-i18n="drop_sub">or click to browse (PDF, DOCX)</span>
+            <input
+              type="file"
+              id="file-input"
+              hidden
+              accept=".pdf,.docx,.doc"
+            />
+          </div>
+          <div class="analysis-options" style="margin-top: 1rem; text-align: center;">
+            <label style="display: block; margin-bottom: 0.5rem; color: var(--text);">
+              <input type="radio" name="analysis-type" value="ml" checked style="margin-right: 0.5rem;">
+              Machine Learning Analysis (Faster, Local)
+            </label>
+            <label style="display: block; color: var(--text);">
+              <input type="radio" name="analysis-type" value="ai" style="margin-right: 0.5rem;">
+              AI-Powered Analysis (More Detailed)
+            </label>
+          </div>
+          <div id="upload-progress" class="progress-container hidden">
+            <div class="progress-bar"></div>
+            <span class="status-text" data-i18n="analyzing">Analyzing...</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. SCORE SECTION -->
+      <section id="score" class="full-screen hidden">
+        <div class="score-display">
+          <div class="circular-score">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+              <path
+                class="circle-bg"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+              <path
+                class="circle"
+                stroke-dasharray="0, 100"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+              <text x="18" y="20.35" class="percentage">0</text>
+            </svg>
+          </div>
+          <h3 data-i18n="score_title">Your Resume Score</h3>
+        </div>
+        <div class="breakdown-grid">
+          <!-- Javascript will populate this -->
+        </div>
+        <button id="btn-view-roadmap" class="btn-secondary" data-i18n="btn_view_roadmap">
+          View Career Roadmap
+        </button>
+      </section>
+
+      <!-- 4. IMPROVEMENT SUGGESTIONS -->
+      <section id="suggestions" class="content-section hidden">
+        <h2 data-i18n="report_title">Analysis Report: Key Improvements</h2>
+        <p style="text-align:center; color:var(--secondary); margin-bottom:2rem" data-i18n="report_sub">Based on your score, we recommend focusing on these areas to improve your resume.</p>
+        <div class="cards-grid" id="suggestions-grid">
+          <!-- Generated by JS -->
+        </div>
+      </section>
+
+      <!-- 5. CAREER ROADMAP -->
+      <section id="roadmap" class="content-section hidden">
+        <h2 data-i18n="roadmap_title">Your Personalized Career Roadmap</h2>
+        <div class="timeline" id="timeline-container">
+          <!-- Generated by JS -->
+        </div>
+        <div class="roadmap-actions" style="margin-top:2rem; text-align:center">
+            <button id="btn-view-jobs" class="btn-primary" data-i18n="btn_view_jobs">View Suitable Jobs ↓</button>
+        </div>
+      </section>
+
+      <!-- 6. JOBS & SALARY -->
+      <section id="jobs" class="content-section hidden">
+        <h2 style="text-align:center; margin-bottom:1rem" data-i18n="jobs_title">Jobs Suitable for You</h2>
+        
+        <div class="salary-box glass" style="padding:2rem; border-radius:12px; margin-bottom:3rem">
+            <h3 style="margin-bottom:1.5rem" data-i18n="salary_growth">Projected Salary Growth</h3>
+            <div class="salary-chart">
+                <div class="salary-row">
+                    <span class="s-label" data-i18n="level_entry">Entry Level</span>
+                    <div class="s-track"><div class="s-bar" style="width: 30%; background: var(--secondary)"></div></div>
+                    <span class="s-val">₹6L</span>
+                </div>
+                <div class="salary-row">
+                    <span class="s-label" data-i18n="level_mid">Mid Level</span>
+                    <div class="s-track"><div class="s-bar" style="width: 60%; background: var(--primary)"></div></div>
+                    <span class="s-val">₹12L</span>
+                </div>
+                <div class="salary-row">
+                    <span class="s-label" data-i18n="level_senior">Senior Level</span>
+                    <div class="s-track"><div class="s-bar" style="width: 90%; background: var(--success)"></div></div>
+                    <span class="s-val">₹20L</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="jobs-grid" id="jobs-grid">
+          <!-- Generated by JS -->
+        </div>
+      </section>
+
+      <!-- 7. INTERVIEW PREP -->
+      <section id="interview" class="content-section hidden">
+        <h2 data-i18n="interview_title">Interview Preparation</h2>
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tech" data-i18n="tab_tech">Technical</button>
+          <button class="tab-btn" data-tab="hr" data-i18n="tab_hr">HR & Soft Skills</button>
+          <button class="tab-btn" data-tab="mcq" data-i18n="tab_mcq">MCQ Practice</button>
+        </div>
+        <div class="questions-container" id="questions-container">
+          <!-- Generated by JS -->
+        </div>
+      </section>
+
+      <!-- 8. SUMMARY -->
+      <section id="summary" class="full-screen hidden">
+        <div class="summary-card">
+          <h2 data-i18n="summary_title">Analysis Complete</h2>
+          <div class="final-actions">
+            <button class="btn-primary" onclick="window.print()" data-i18n="btn_download">
+              Download Report
+            </button>
+            <button class="btn-outline" onclick="location.reload()" data-i18n="btn_restart">
+              Start Over
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/animations.js"></script>
+    <script src="assets/js/background.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

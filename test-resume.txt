@@ -1,0 +1,16 @@
+﻿John Doe
+Software Developer
+Email: john@example.com
+Phone: +1234567890
+
+Experience:
+- Software Engineer at Tech Corp (2020-Present)
+- Junior Developer at Startup Inc (2018-2020)
+
+Skills:
+- JavaScript
+- React
+- Node.js
+
+Education:
+- Bachelor's in Computer Science, University (2018)
